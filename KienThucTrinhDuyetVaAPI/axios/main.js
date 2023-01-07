@@ -38,18 +38,44 @@
 // })
 
 //Learning axios
-// method get 
+const userApi = axios.create({
+  baseURL: "https://reqres.in/api"
+})
 
-axios
-  .get("https://reqres.in/api/users", {
+userApi.interceptors.request.use(function (config) {
+  return config
+}, function (error) {
+  return Promise.reject(error);
+})
+
+userApi.interceptors.response.use(function (response) {
+  console.log(response)
+  return {
+    data: response.data.data,
+    pagination: {
+      page: response.data.page,
+      per_page: response.data.per_page,
+      total: response.data.total,
+      total_pages: response.data.total_pages
+    }
+  }
+}, function (error) {
+  return Promise.reject(error);
+})
+
+// method get
+
+userApi
+  .get("/users?page=2", {
     params: {
-      page: 2
+      page: 2,
     }
   })
   .then((res) => {
+    console.log(res)
     let html = "";
 
-    res.data.data.forEach((item) => {
+    res.data.forEach((item) => {
       html += `<div>${item.first_name} ${item.last_name}</div>`;
     });
 
@@ -59,5 +85,15 @@ axios
     console.error(error.message);
   });
 
-
 //method post
+// userApi
+//   .post("/users", {
+//     name: "Sang",
+//     job: "Frontend Dev",
+//   })
+//   .then((res) => {
+//     // console.log(res);
+//   })
+//   .catch((error) => {
+//     console.warn(error);
+//   });
