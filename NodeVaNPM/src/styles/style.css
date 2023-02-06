@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto-Regular.ttf') format('truetype');
+  font-weight: 400;
+}
+
 body {
   background-color: paleturquoise;
+  font-family: 'Roboto', sans-serif;
+  /* background-image: url('../images//152183-Gundam-Mobile-Suit-Gundam-mech-RX-78-Gundam-anime-robot-Mobile-Suit-Gundam-Iron-Blooded-Orphans-artwork-digital-art-Gundam-Versus-Barbatos.jpg'); */
 }
