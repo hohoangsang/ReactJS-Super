@@ -1,4 +1,3 @@
-import { clearConfigCache } from 'prettier';
 import { Fragment } from 'react';
 import { Component } from 'react';
 
@@ -15,6 +14,7 @@ const fetchApi = () => {
 class Clock extends Component {
   constructor(props) {
     super(props);
+    console.log('Constructor');
     this.state = {
       first: {
         time: new Date().toLocaleTimeString()
@@ -46,7 +46,7 @@ class Clock extends Component {
   componentDidMount() {
     //access DOM node
     const h2Element = document.getElementById('second');
-    console.log(h2Element);
+    console.log('ComponentDidMount');
 
     //Call api and setState
     fetchApi().then((res) => {
@@ -57,8 +57,12 @@ class Clock extends Component {
     });
   }
 
+  componentWillUnmount() {
+    console.log('ComponentWillUnMount');
+  }
+
   render() {
-    console.log(this.state.lists);
+    console.log('Render');
     const { first, seconds } = this.state;
     return (
       <Fragment>
