@@ -3,6 +3,7 @@ import './App.css';
 import Clock from './components/Clock';
 import BareInput from './components/BareInput';
 import Layout from './components/Layout';
+import BareButton from './components/BareButton';
 
 function App() {
   // const [visible, setVisible] = useState(true);
@@ -17,6 +18,8 @@ function App() {
           autoFocus
           className='input'
         />
+        <br />
+        <BareButton />
       </Layout>
       {/* <button onClick={() => setVisible(false)}>Hide Clocks</button>
       {visible && <Clock />} */}
