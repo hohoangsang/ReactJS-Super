@@ -4,6 +4,10 @@ import Clock from './components/Clock';
 import BareInput from './components/BareInput';
 import Layout from './components/Layout';
 import BareButton from './components/BareButton';
+import CorrectlyState from './components/CorrectlyState';
+import ProductList from './Product/ProductList';
+import Form from './Form/Form';
+import UncontrollComponent from './Form/UncontrollComponent';
 
 function App() {
   // const [visible, setVisible] = useState(true);
@@ -11,7 +15,7 @@ function App() {
   return (
     <div className='App'>
       <Layout>
-        <h1>Layout</h1>
+        {/* <h1>Layout</h1>
         <BareInput
           value={'100'}
           onChange={() => {}}
@@ -19,7 +23,11 @@ function App() {
           className='input'
         />
         <br />
-        <BareButton />
+        <BareButton /> */}
+        {/* <CorrectlyState /> */}
+        {/* <ProductList /> */}
+        {/* <Form /> */}
+        <UncontrollComponent />
       </Layout>
       {/* <button onClick={() => setVisible(false)}>Hide Clocks</button>
       {visible && <Clock />} */}
