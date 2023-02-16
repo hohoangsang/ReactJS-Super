@@ -8,6 +8,7 @@ import CorrectlyState from './components/CorrectlyState';
 import ProductList from './Product/ProductList';
 import Form from './Form/Form';
 import UncontrollComponent from './Form/UncontrollComponent';
+import Temperature from './Temparature/Temperature';
 
 function App() {
   // const [visible, setVisible] = useState(true);
@@ -27,7 +28,8 @@ function App() {
         {/* <CorrectlyState /> */}
         {/* <ProductList /> */}
         {/* <Form /> */}
-        <UncontrollComponent />
+        {/* <UncontrollComponent /> */}
+        <Temperature />
       </Layout>
       {/* <button onClick={() => setVisible(false)}>Hide Clocks</button>
       {visible && <Clock />} */}
