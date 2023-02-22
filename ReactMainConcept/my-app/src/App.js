@@ -9,6 +9,7 @@ import ProductList from './Product/ProductList';
 import Form from './Form/Form';
 import UncontrollComponent from './Form/UncontrollComponent';
 import Temperature from './Temparature/Temperature';
+import FilterableProductList from './ThinkingInReact/FilterableProductList';
 
 function App() {
   // const [visible, setVisible] = useState(true);
@@ -29,7 +30,8 @@ function App() {
         {/* <ProductList /> */}
         {/* <Form /> */}
         {/* <UncontrollComponent /> */}
-        <Temperature />
+        {/* <Temperature /> */}
+        <FilterableProductList />
       </Layout>
       {/* <button onClick={() => setVisible(false)}>Hide Clocks</button>
       {visible && <Clock />} */}
