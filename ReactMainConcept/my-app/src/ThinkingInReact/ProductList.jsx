@@ -14,7 +14,7 @@ class ProductList extends Component {
     productList.forEach((product) => {
       if (!product.stocked && inStock) return;
 
-      if (product.name.toLowerCase().indexOf(searchText) === -1) return;
+      if (!product.name.toLowerCase().includes(searchText)) return;
 
       if (product.category !== category) {
         rows.push(

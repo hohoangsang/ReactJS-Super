@@ -14,3 +14,7 @@
 .category-row {
   font-weight: bold;
 }
+
+.out-stock {
+  color: red;
+}
