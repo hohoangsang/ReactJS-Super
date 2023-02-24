@@ -1,0 +1,19 @@
+.container {
+  width: 400px;
+  margin: 1rem auto;
+  padding: 1rem;
+  border: 1px solid gray;
+  border-radius: 20px;
+
+  .button-item {
+    outline: none;
+    border: none;
+    background-color: green;
+    color: white;
+    border: 1px solid greenyellow;
+    border-radius: 20px;
+    width: 100px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+}

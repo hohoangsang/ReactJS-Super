@@ -2,6 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import ProductList from "./ProductList/ProductList";
 import Cart from "./Cart/Cart";
+import About from "./About/About";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       </header>
       <Cart />
       <ProductList />
+      <About />
     </div>
   );
 }
