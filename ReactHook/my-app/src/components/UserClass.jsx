@@ -1,8 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import styled, { createGlobalStyle } from "styled-components";
+
+//useEffect - tổng hợp kiến thức
+//1. useEffect(callback)
+// callback sẽ chạy mỗi khi component re-render ==> giống với componentDidUpdate trong class Component
+//2. useEffect(callback, [])
+// callback sẽ chạy ngay khi component được render lần đầu ==> giống với componentDidMount, thường dùng để gọi api
+//3. useEffect(callback, [deps])
+// callback sẽ chạy khi các deps thay đổi ==> nên đặt điều kiện cho các deps để tránh bị re-render vô hạn
+// - Clean-up function trong callback
+// Dùng để clear việc gọi api, hủy subscription, event handler, setTimeout, setInterval
+// logic trong clean up function sẽ được chạy trước khi side effect tiếp theo được thực thi
+// ========
+// Điểm chung của cả 3 trường hợp
+// callback trong useEffect luôn chạy mỗi khi component được mount ==> có thể truy cập vào DOM thật
+// Những giá trị mà useEffect sẽ báo là cần đặt vào trong deps nếu trong callback có sử dụng những giá trị đó: state, giá trị tham chiếu
+
+const Container = styled.div`
+  display: block;
+  margin: 1rem;
+`;
 
 function initExerciseData() {
-  console.log("init data reder");
-
   return {
     type: "lower body",
     name: "leg press",
@@ -13,6 +32,21 @@ function initExerciseData() {
     },
   };
 }
+
+const fetchExercise = () =>
+  new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        type: "lower body",
+        name: "leg press",
+        cloths: {
+          sirt: 300,
+          shoe: 200,
+          jacket: 0,
+        },
+      });
+    }, 4000);
+  });
 
 export default function UserClass() {
   const [name, setName] = useState("Sang");
@@ -52,10 +86,29 @@ export default function UserClass() {
     });
   };
 
-  // console.log("re-render");
+  useEffect(() => {
+    console.log("component render");
+    fetchExercise().then((res) => {
+      setExercise((prevExercise) => {
+        const newExercise = { ...prevExercise };
+        newExercise.cloths.shoe = res.cloths.shoe;
+        return newExercise;
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log("age: ", age);
+
+    return () => {
+      console.log("clean up function");
+    };
+  }, [age]);
+
+  console.log("render");
 
   return (
-    <div>
+    <Container>
       <h1>User Funtional Component</h1>
       <ul>
         <li>Name: {name}</li>
@@ -77,6 +130,8 @@ export default function UserClass() {
       </ul>
 
       <button onClick={changeCloth}>Change cloth</button>
-    </div>
+
+      <br />
+    </Container>
   );
 }
