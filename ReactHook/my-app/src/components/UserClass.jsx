@@ -7,11 +7,13 @@ import styled from "styled-components";
 // callback sẽ chạy mỗi khi component re-render ==> giống với componentDidUpdate trong class Component
 //2. useEffect(callback, [])
 // callback sẽ chạy ngay khi component được render lần đầu ==> giống với componentDidMount, thường dùng để gọi api
+// Logic trong callback thường dùng để kết nỗi DOM thật, gọi Api, setTimeout, setInterval, addEventListener
 //3. useEffect(callback, [deps])
 // callback sẽ chạy khi các deps thay đổi ==> nên đặt điều kiện cho các deps để tránh bị re-render vô hạn
 // - Clean-up function trong callback
-// Dùng để clear việc gọi api, hủy subscription, event handler, setTimeout, setInterval, clearTimeout, clearInterval
-// logic trong clean up function sẽ được chạy trước khi các xử lý trongs side effect tiếp theo được thực thi (ngoại trừ lần mouted đầu tiên của component)
+// Dùng để clear việc gọi api, hủy subscription, removeEventListener, clearTimeout, clearInterval
+// logic trong clean up function sẽ được chạy trước khi các xử lý trongs side effect tiếp theo được thực thi (ngoại trừ lần mounted đầu tiên của component)
+// logic trong clean up function cũng được chạy ngay trước khi component un mount
 // ========
 // Điểm chung của cả 3 trường hợp
 // callback trong useEffect luôn chạy mỗi khi component được mount ==> có thể truy cập vào DOM thật

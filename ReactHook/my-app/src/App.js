@@ -5,6 +5,7 @@ import { useState } from "react";
 import ResizeComponent from "./components/ResizeComponent";
 import Timer from "./components/Timer";
 import PreviewAvatar from "./components/PreviewAvatar";
+import FakeChatApp from "./components/FakeChatApp";
 
 function App() {
   const [visible, setVisible] = useState(false);
@@ -18,8 +19,9 @@ function App() {
       <button onClick={handleToggle}>Toogle</button>
       {/* {visible && <UserClass />} */}
       {/* {visible && <ResizeComponent />} */}
-      {visible && <Timer />}
+      {/* {visible && <Timer />} */}
       {/* {visible && <PreviewAvatar />} */}
+      {visible && <FakeChatApp />}
     </div>
   );
 }
