@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import styled, { createGlobalStyle } from "styled-components";
+import styled from "styled-components";
 
-//useEffect - tổng hợp kiến thức
+//useEffect - tổng hợp kiến thức - useEffect(callback, deps?)
+// Side effects: Thuật ngữ chung trong lập trình phần mềm, chỉ việc khi có 1 tác động xãy ra trên phần mềm thì dữ liệu sẽ thay đổi
 //1. useEffect(callback)
 // callback sẽ chạy mỗi khi component re-render ==> giống với componentDidUpdate trong class Component
 //2. useEffect(callback, [])
@@ -9,8 +10,8 @@ import styled, { createGlobalStyle } from "styled-components";
 //3. useEffect(callback, [deps])
 // callback sẽ chạy khi các deps thay đổi ==> nên đặt điều kiện cho các deps để tránh bị re-render vô hạn
 // - Clean-up function trong callback
-// Dùng để clear việc gọi api, hủy subscription, event handler, setTimeout, setInterval
-// logic trong clean up function sẽ được chạy trước khi side effect tiếp theo được thực thi
+// Dùng để clear việc gọi api, hủy subscription, event handler, setTimeout, setInterval, clearTimeout, clearInterval
+// logic trong clean up function sẽ được chạy trước khi các xử lý trongs side effect tiếp theo được thực thi (ngoại trừ lần mouted đầu tiên của component)
 // ========
 // Điểm chung của cả 3 trường hợp
 // callback trong useEffect luôn chạy mỗi khi component được mount ==> có thể truy cập vào DOM thật
@@ -48,46 +49,20 @@ const fetchExercise = () =>
     }, 4000);
   });
 
-export default function UserClass() {
-  const [name, setName] = useState("Sang");
-  const [age, setAge] = useState(10);
-  const [, forceRender] = useState(0);
-  const [address, setAddress] = useState({
-    province: "QuangNam",
-    city: "HoiAn",
-  });
-  const [exercise, setExercise] = useState(initExerciseData);
+const tabs = ["posts", "todos", "albums"];
 
-  const increaseAge = () => {
-    setAge((prevAge) => prevAge + 1);
-  };
+export default function UserClass() {
+  const [, forceRender] = useState(0);
+  const [exercise, setExercise] = useState(initExerciseData);
+  const [posts, setPosts] = useState([]);
+  const [type, setType] = useState("posts");
+  const [showBtn, setShowBtn] = useState(false);
 
   const forceReRender = () => {
     forceRender((prevState) => prevState + 1);
   };
 
-  const changeCity = () => {
-    setAddress((prevAddress) => {
-      return {
-        ...prevAddress,
-        city: "Danang",
-      };
-    });
-  };
-
-  const changeCloth = () => {
-    setExercise((prevExcersie) => {
-      const newCloths = { ...prevExcersie.cloths };
-      newCloths.jacket = 1;
-      return {
-        ...prevExcersie,
-        cloths: newCloths,
-      };
-    });
-  };
-
   useEffect(() => {
-    console.log("component render");
     fetchExercise().then((res) => {
       setExercise((prevExercise) => {
         const newExercise = { ...prevExercise };
@@ -95,30 +70,51 @@ export default function UserClass() {
         return newExercise;
       });
     });
+
+    const changeClothBtn = document.getElementsByClassName("change-cloth-btn");
+
+    const changeCloth = () => {
+      setExercise((prevExcersie) => {
+        const newCloths = { ...prevExcersie.cloths };
+        newCloths.jacket = 1;
+        return {
+          ...prevExcersie,
+          cloths: newCloths,
+        };
+      });
+    };
+
+    changeClothBtn[0].addEventListener("click", changeCloth);
   }, []);
 
+  //useEffect(callback, [deps])
   useEffect(() => {
-    console.log("age: ", age);
+    fetch(`https://jsonplaceholder.typicode.com/${type}`)
+      .then((res) => res.json())
+      .then((res) => setPosts(res));
+  }, [type]);
+
+  //handle DOM event in useEffect
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY >= 300) {
+        setShowBtn(true);
+      } else {
+        setShowBtn(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      console.log("clean up function");
+      window.removeEventListener("scroll", handleScroll);
+      console.log("remove event listener");
     };
-  }, [age]);
-
-  console.log("render");
+  }, []);
 
   return (
     <Container>
       <h1>User Funtional Component</h1>
-      <ul>
-        <li>Name: {name}</li>
-        <li>Age: {age}</li>
-        <li>Province: {address.province}</li>
-        <li>City: {address.city}</li>
-      </ul>
-      <button onClick={increaseAge}>Increase Age</button>
       <button onClick={forceReRender}>Force Re-render</button>
-      <button onClick={changeCity}>Change City</button>
 
       <h2>Exercise Infomation</h2>
       <ul>
@@ -129,9 +125,37 @@ export default function UserClass() {
         <li>Jacket: {exercise.cloths.jacket}</li>
       </ul>
 
-      <button onClick={changeCloth}>Change cloth</button>
+      <button className="change-cloth-btn">Change cloth</button>
 
-      <br />
+      <h3>Tabs Data</h3>
+      {tabs.map((tab) => (
+        <button
+          key={tab}
+          onClick={() => setType(tab)}
+          style={
+            type === tab ? { backgroundColor: "#333", color: "white" } : {}
+          }
+        >
+          {tab}
+        </button>
+      ))}
+      <ul>
+        {posts.map((post) => (
+          <li key={post.id}>{post.title}</li>
+        ))}
+      </ul>
+
+      {showBtn && (
+        <button
+          style={{
+            position: "fixed",
+            bottom: "20px",
+            right: "20px",
+          }}
+        >
+          Go to top
+        </button>
+      )}
     </Container>
   );
 }
