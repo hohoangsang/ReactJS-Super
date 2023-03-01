@@ -1,11 +1,13 @@
 import logo from "./logo.svg";
 import "./App.css";
-import UserClass from "./components/UserClass";
+import UserClass from "./components/useEffect/UserClass";
 import { useState } from "react";
-import ResizeComponent from "./components/ResizeComponent";
-import Timer from "./components/Timer";
-import PreviewAvatar from "./components/PreviewAvatar";
-import FakeChatApp from "./components/FakeChatApp";
+import ResizeComponent from "./components/useEffect/ResizeComponent";
+import Timer from "./components/useEffect/Timer";
+import PreviewAvatar from "./components/useEffect/PreviewAvatar";
+import FakeChatApp from "./components/useEffect/FakeChatApp";
+import UserClassContext from "./components/useContext/UserClassContext";
+import AutoBatching from "./components/AutoBatching";
 
 function App() {
   const [visible, setVisible] = useState(false);
@@ -21,7 +23,10 @@ function App() {
       {/* {visible && <ResizeComponent />} */}
       {/* {visible && <Timer />} */}
       {/* {visible && <PreviewAvatar />} */}
-      {visible && <FakeChatApp />}
+      {/* {visible && <FakeChatApp />} */}
+
+      {/* <UserClassContext /> */}
+      <AutoBatching />
     </div>
   );
 }
