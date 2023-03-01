@@ -7,16 +7,22 @@ export default function AutoBatching() {
   const [count2, setCount2] = useState(10);
 
   const handleClick = () => {
-    flushSync(() => {
-      setCount((c) => c + 1);
-      setCount(count + 1);
-    });
-    // setCount((c) => c + 1);
-    // setCount(count + 1);
+    // flushSync(() => {
+    //   setCount((c) => c + 1);
+    //   setCount(count + 1);
+    // });
+    setCount(count + 3);
+    setCount(count + 1);
+    setCount((c) => c + 1);
 
     setFlag((f) => !f);
     // React will only re-render once at the end (that's batching!)
   };
+
+  useEffect(() => {
+    setCount((c) => c + 1);
+    setCount((prevCount) => prevCount + 1);
+  }, []);
 
   console.log("count: ", count);
 

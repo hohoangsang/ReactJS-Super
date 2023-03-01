@@ -8,6 +8,8 @@ import PreviewAvatar from "./components/useEffect/PreviewAvatar";
 import FakeChatApp from "./components/useEffect/FakeChatApp";
 import UserClassContext from "./components/useContext/UserClassContext";
 import AutoBatching from "./components/AutoBatching";
+import ListMotobike from "./components/Body/ListMotobike";
+import Colection from "./components/Body/Colection";
 
 function App() {
   const [visible, setVisible] = useState(false);
@@ -18,7 +20,7 @@ function App() {
 
   return (
     <div className="App">
-      <button onClick={handleToggle}>Toogle</button>
+      {/* <button onClick={handleToggle}>Toogle</button> */}
       {/* {visible && <UserClass />} */}
       {/* {visible && <ResizeComponent />} */}
       {/* {visible && <Timer />} */}
@@ -26,7 +28,9 @@ function App() {
       {/* {visible && <FakeChatApp />} */}
 
       {/* <UserClassContext /> */}
-      <AutoBatching />
+      {/* <AutoBatching /> */}
+      <ListMotobike />
+      <Colection />
     </div>
   );
 }
