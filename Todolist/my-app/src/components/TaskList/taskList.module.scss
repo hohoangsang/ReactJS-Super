@@ -1,0 +1,54 @@
+.taskListContainer {
+  margin-top: 1.5rem;
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.taskList {
+  .task:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
+  .task {
+    display: flex;
+    align-items: flex-start;
+
+    .taskCheckBox {
+      flex: 0 0 10%;
+      height: 2rem;
+      max-width: 10%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+    .taskName {
+      flex: 0 0 70%;
+
+      &-done {
+        color: #b2b7bb;
+        text-decoration: line-through;
+      }
+    }
+
+    .taskAction {
+      flex: 0 0 20%;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      max-width: 20%;
+
+      .taskBtn {
+        height: 3rem;
+        flex-shrink: 0;
+        padding: 0;
+        width: 4rem;
+        border-radius: 0.5rem;
+        border-width: 1px;
+      }
+    }
+  }
+}
