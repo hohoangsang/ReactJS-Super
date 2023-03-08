@@ -1,15 +1,16 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { Todo } from '../../@types/todo.type';
+import { TodoType } from '../../PropTypes/todo.proptypes';
 import styles from './taskInput.module.scss';
-
 interface TaskInputProps {
-  handleAddTodo: (name: string) => void;
-  currentTodo: Todo | null | undefined;
+  addTodo: (name: string) => void;
+  currentTodo: Todo | null;
   updateTaskTodo: (newTodo: Todo) => void;
 }
 
 export default function TaskInput(props: TaskInputProps) {
-  const { handleAddTodo, currentTodo, updateTaskTodo } = props;
+  const { addTodo, currentTodo, updateTaskTodo } = props;
 
   const [taskName, setTaskName] = useState<string>('');
 
@@ -29,7 +30,7 @@ export default function TaskInput(props: TaskInputProps) {
         name: trimedTaskName
       });
     } else {
-      handleAddTodo(trimedTaskName);
+      addTodo(trimedTaskName);
     }
 
     setTaskName('');
@@ -60,3 +61,9 @@ export default function TaskInput(props: TaskInputProps) {
     </form>
   );
 }
+
+TaskInput.propTypes = {
+  addTodo: PropTypes.func.isRequired,
+  currentTodo: PropTypes.oneOfType([TodoType, PropTypes.oneOf([null])]),
+  updateTaskTodo: PropTypes.func.isRequired
+};

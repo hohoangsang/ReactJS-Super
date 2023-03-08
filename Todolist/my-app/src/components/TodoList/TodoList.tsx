@@ -95,7 +95,7 @@ export default function TodoList() {
       <div className={styles.todoListContainer}>
         <h1 className={styles.title}>Todo list</h1>
         <TaskInput
-          handleAddTodo={handleAddTodo}
+          addTodo={handleAddTodo}
           currentTodo={currentTodo}
           updateTaskTodo={updateTaskTodo}
         />

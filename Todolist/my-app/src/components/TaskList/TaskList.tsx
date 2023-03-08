@@ -1,6 +1,8 @@
 import React from 'react';
 import { Todo } from '../../@types/todo.type';
 import styles from './taskList.module.scss';
+import PropTypes from 'prop-types';
+import { TodoType } from '../../PropTypes/todo.proptypes';
 
 interface TaskListProps {
   taskListDone?: boolean;
@@ -59,3 +61,11 @@ export default function TaskList(props: TaskListProps) {
     </div>
   );
 }
+
+TaskList.propTypes = {
+  taskListDone: PropTypes.bool,
+  todos: PropTypes.arrayOf(TodoType),
+  handleDoneTask: PropTypes.func.isRequired,
+  assignCurrentTodo: PropTypes.func.isRequired,
+  removeTodo: PropTypes.func.isRequired
+};
