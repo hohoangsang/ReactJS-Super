@@ -23,6 +23,7 @@ input,
 button {
   font-size: var(--font-size);
   outline: 0;
+  cursor: pointer;
 }
 
 code {

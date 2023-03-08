@@ -1,12 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Todo } from '../../@types/todo.type';
 import TaskInput from '../TaskInput';
 import TaskList from '../TaskList';
 import styles from './todoList.module.scss';
 
+type HandleNewTodo = (todo: Todo[]) => Todo[];
+
+const syncReactToLocalStorage = (handleNewTodo: HandleNewTodo) => {
+  const todoString = localStorage.getItem('todos');
+  const todoObject: Todo[] = JSON.parse(todoString || '[]');
+  const newTodoObject = handleNewTodo(todoObject);
+  localStorage.setItem('todos', JSON.stringify(newTodoObject));
+};
+
 export default function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [currentTodo, setCurrentTodo] = useState<Todo | null>();
+  const [currentTodo, setCurrentTodo] = useState<Todo | null>(null);
+
+  useEffect(() => {
+    const todoString = localStorage.getItem('todos');
+    const todoObject: Todo[] = JSON.parse(todoString || '[]');
+    setTodos(todoObject);
+  }, []);
 
   const handleAddTodo = (name: string) => {
     const newTodo = {
@@ -15,33 +30,62 @@ export default function TodoList() {
       id: new Date().toISOString()
     };
 
-    setTodos((prevTodos) => [...prevTodos, newTodo]);
+    const handler = (todoObject: Todo[]) => {
+      return [...todoObject, newTodo];
+    };
+
+    setTodos(handler);
+    syncReactToLocalStorage(handler);
   };
 
   const updateTaskTodo = (newTodo: Todo) => {
-    const newTodos = todos.map((todo) => {
-      if (todo.id === newTodo.id) {
-        return newTodo;
-      }
-      return todo;
-    });
+    const handler = (todoObject: Todo[]) => {
+      const newTodos = todoObject.map((todo) => {
+        if (todo.id === newTodo.id) {
+          return newTodo;
+        }
+        return todo;
+      });
+      return newTodos;
+    };
 
-    setTodos(newTodos);
+    setTodos(handler);
     setCurrentTodo(null);
+    syncReactToLocalStorage(handler);
+  };
+
+  const assignCurrentTodo = (todo: Todo) => {
+    setCurrentTodo(todo);
   };
 
   const handleDoneTask = (taskId: string, done: boolean) => {
-    const newTodos = todos.map((todo) => {
-      if (todo.id === taskId) {
-        return { ...todo, done };
-      }
-      return todo;
-    });
+    const handler = (todoObject: Todo[]) => {
+      const newTodos = todoObject.map((todo) => {
+        if (todo.id === taskId) {
+          return { ...todo, done };
+        }
+        return todo;
+      });
 
-    setTodos(newTodos);
+      return newTodos;
+    };
+
+    setTodos(handler);
+    syncReactToLocalStorage(handler);
   };
 
-  console.log(todos);
+  const removeTodo = (todoId: string) => {
+    const handler = (todoObject: Todo[]) => {
+      const newTodos = todoObject.filter((todo) => todo.id !== todoId);
+      return newTodos;
+    };
+
+    if (currentTodo) {
+      setCurrentTodo(null);
+    }
+    setTodos(handler);
+    syncReactToLocalStorage(handler);
+  };
 
   const doneTaskList = todos.filter((todo) => todo.done);
   const notDoneTaskList = todos.filter((todo) => !todo.done);
@@ -50,9 +94,24 @@ export default function TodoList() {
     <div className={styles.todoList}>
       <div className={styles.todoListContainer}>
         <h1 className={styles.title}>Todo list</h1>
-        <TaskInput handleAddTodo={handleAddTodo} />
-        <TaskList todos={notDoneTaskList} handleDoneTask={handleDoneTask} />
-        <TaskList taskListDone todos={doneTaskList} handleDoneTask={handleDoneTask} />
+        <TaskInput
+          handleAddTodo={handleAddTodo}
+          currentTodo={currentTodo}
+          updateTaskTodo={updateTaskTodo}
+        />
+        <TaskList
+          todos={notDoneTaskList}
+          handleDoneTask={handleDoneTask}
+          assignCurrentTodo={assignCurrentTodo}
+          removeTodo={removeTodo}
+        />
+        <TaskList
+          taskListDone
+          todos={doneTaskList}
+          handleDoneTask={handleDoneTask}
+          assignCurrentTodo={assignCurrentTodo}
+          removeTodo={removeTodo}
+        />
       </div>
     </div>
   );
