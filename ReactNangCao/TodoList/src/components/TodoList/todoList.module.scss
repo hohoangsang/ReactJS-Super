@@ -1,0 +1,17 @@
+.todoList {
+  padding: 3rem;
+
+  .todoListContainer {
+    max-width: 50rem;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 2px solid #333;
+    border-radius: 2rem;
+    padding: 2rem;
+
+    .title {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+  }
+}
