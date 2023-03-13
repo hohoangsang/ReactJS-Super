@@ -1,20 +1,18 @@
 import PropTypes from 'prop-types';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { Todo } from '../../@types/todo.type';
-import { connect, ExtraInfoType } from '../../HOC/connect';
+import { connect2 } from '../../HOC/connect';
 import { TodoType } from '../../PropTypes/todo.proptypes';
 import styles from './taskInput.module.scss';
 
-interface TaskInputProps extends ExtraInfoType {
+interface TaskInputProps {
   addTodo: (name: string) => void;
   currentTodo: Todo | null;
   updateTaskTodo: (newTodo: Todo) => void;
 }
 
-function TaskInput(props: TaskInputProps) {
-  const { addTodo, currentTodo, updateTaskTodo, debug, log } = props;
-
-  log(debug);
+function TaskInput(props: TaskInputProps & typeof InjectedProps) {
+  const { addTodo, currentTodo, updateTaskTodo } = props;
 
   const [taskName, setTaskName] = useState<string>('');
 
@@ -72,4 +70,13 @@ TaskInput.propTypes = {
   updateTaskTodo: PropTypes.func.isRequired
 };
 
-export default connect(TaskInput);
+// export default connect(TaskInput);
+const InjectedProps = {
+  name: 'Sang',
+  age: 24
+};
+
+export default connect2({
+  name: 'Sang',
+  age: 24
+})(TaskInput);

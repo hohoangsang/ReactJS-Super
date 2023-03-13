@@ -3,6 +3,7 @@ import { Todo } from '../../@types/todo.type';
 import styles from './taskList.module.scss';
 import PropTypes from 'prop-types';
 import { TodoType } from '../../PropTypes/todo.proptypes';
+import { connect2, InfoUser } from '../../HOC/connect';
 
 interface TaskListProps {
   taskListDone?: boolean;
@@ -12,7 +13,7 @@ interface TaskListProps {
   removeTodo: (todoId: string) => void;
 }
 
-export default function TaskList(props: TaskListProps) {
+function TaskList(props: TaskListProps) {
   const { taskListDone, todos, handleDoneTask, assignCurrentTodo, removeTodo } = props;
 
   const handleCheckTask = (taskId: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,8 +65,13 @@ export default function TaskList(props: TaskListProps) {
 
 TaskList.propTypes = {
   taskListDone: PropTypes.bool,
-  todos: PropTypes.arrayOf(TodoType),
+  todos: PropTypes.arrayOf(TodoType).isRequired,
   handleDoneTask: PropTypes.func.isRequired,
   assignCurrentTodo: PropTypes.func.isRequired,
   removeTodo: PropTypes.func.isRequired
 };
+
+export default connect2({
+  name: 'My Duyen',
+  age: 23
+})(TaskList);
