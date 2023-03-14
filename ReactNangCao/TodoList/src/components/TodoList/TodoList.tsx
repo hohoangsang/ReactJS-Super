@@ -93,7 +93,6 @@ export default function TodoList() {
   return (
     <div className={styles.todoList}>
       <div className={styles.todoListContainer}>
-        <h1 className={styles.title}>Todo list</h1>
         <TaskInput
           addTodo={handleAddTodo}
           currentTodo={currentTodo}

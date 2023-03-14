@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { Todo } from '../../@types/todo.type';
 import { connect2 } from '../../HOC/connect';
 import { TodoType } from '../../PropTypes/todo.proptypes';
+import Title from '../Title';
 import styles from './taskInput.module.scss';
 
 interface TaskInputProps {
@@ -50,17 +51,30 @@ function TaskInput(props: TaskInputProps & typeof InjectedProps) {
     }
   }, [currentTodo]);
 
+  const info = useMemo(() => {
+    return {
+      name: 'Sang'
+    };
+  }, []);
+
+  const logSomething = useCallback((value: any) => {
+    console.log(value);
+  }, []);
+
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
-      <input
-        type='text'
-        name='taskName'
-        placeholder='Enter task...'
-        value={taskName}
-        onChange={handleChangeTaskName}
-      />
-      <button type='submit'>{currentTodo ? '✔' : '➕'}</button>
-    </form>
+    <>
+      <Title info={info} logSomething={logSomething} />
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <input
+          type='text'
+          name='taskName'
+          placeholder='Enter task...'
+          value={taskName}
+          onChange={handleChangeTaskName}
+        />
+        <button type='submit'>{currentTodo ? '✔' : '➕'}</button>
+      </form>
+    </>
   );
 }
 
