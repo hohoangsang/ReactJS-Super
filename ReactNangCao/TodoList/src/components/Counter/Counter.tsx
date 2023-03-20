@@ -1,11 +1,11 @@
 import { useReducer } from 'react';
 import { decreaseAgeAction, increaseAgeAction, increaseXAgeAction } from '../../reducer/actions';
-import reducer, { initialAge, log } from '../../reducer/reducer';
+import reducer, { init, initialAge, log } from '../../reducer/reducer';
 
 const x = 4;
 
 export default function Counter() {
-  const [state, dispatch] = useReducer(log(), initialAge);
+  const [state, dispatch] = useReducer(log(), initialAge, init);
 
   const increaseAge = () => {
     dispatch(increaseAgeAction());

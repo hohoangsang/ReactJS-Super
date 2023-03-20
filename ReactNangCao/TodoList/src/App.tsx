@@ -7,11 +7,11 @@ import Watch from './components/Watch';
 function App() {
   return (
     <div>
-      <TodoList />
+      {/* <TodoList /> */}
       {/* <Watch /> */}
       {/* <Slider /> */}
       {/* <Count /> */}
-      {/* <Counter /> */}
+      <Counter />
     </div>
   );
 }

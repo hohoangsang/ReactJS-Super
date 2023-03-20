@@ -4,6 +4,13 @@ export const initialAge = {
   age: 10
 };
 
+export function init(initialAgr: typeof initialAge) {
+  return {
+    ...initialAgr,
+    age: 20
+  };
+}
+
 export default function reducer(state: typeof initialAge, action: ActionType) {
   switch (action.type) {
     case 'INCREASE_AGE':
