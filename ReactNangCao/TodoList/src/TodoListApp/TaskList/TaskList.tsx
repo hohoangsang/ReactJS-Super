@@ -42,14 +42,9 @@ function TaskList(props: TaskListProps) {
               checked={todo.done}
               onChange={handleCheckTask(todo.id)}
             />
-            <span className={`${styles.taskName} ${todo.done ? styles['taskName-done'] : ''}`}>
-              {todo.name}
-            </span>
+            <span className={`${styles.taskName} ${todo.done ? styles['taskName-done'] : ''}`}>{todo.name}</span>
             <div className={styles.taskAction}>
-              <button
-                className={`${styles.taskBtn}`}
-                onClick={() => handleSelectedTaskUpdate(todo)}
-              >
+              <button className={`${styles.taskBtn}`} onClick={() => handleSelectedTaskUpdate(todo)}>
                 🖋
               </button>
               <button className={styles.taskBtn} onClick={() => handleRemoveTodo(todo.id)}>
