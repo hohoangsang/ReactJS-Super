@@ -14,8 +14,8 @@ function App() {
       {/* <Slider /> */}
       {/* <Count /> */}
       {/* <Counter /> */}
-      {/* <Form /> */}
-      <AutoInput />
+      <Form />
+      {/* <AutoInput /> */}
     </div>
   );
 }

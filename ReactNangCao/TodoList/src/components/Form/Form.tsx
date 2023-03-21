@@ -1,9 +1,10 @@
 import React, { createContext, useCallback, useContext, useId, useMemo, useState } from 'react';
+import useTheme from './custromHook/useTheme';
 import styles from './form.module.scss';
 
-type ThemeColor = 'light' | 'dark';
+export type ThemeColor = 'light' | 'dark';
 
-interface ContextType {
+export interface ContextType {
   theme: {
     color: ThemeColor;
   };
@@ -18,12 +19,8 @@ const ThemeContext = createContext<ContextType>({
 });
 
 export default function Form() {
-  const [theme, setTheme] = useState<ContextType['theme']>({ color: 'light' });
+  const { onChangeTheme, theme } = useTheme();
   const [, forceRender] = useState({});
-
-  const onChangeTheme = useCallback((color: ThemeColor) => {
-    setTheme((prev) => ({ ...prev, color }));
-  }, []);
 
   const valueContext = useMemo(() => {
     return { theme, onChangeTheme };
@@ -44,15 +41,14 @@ export default function Form() {
   );
 }
 
-const FormComponent = React.memo(() => {
-  console.log('re-render');
+const FormComponent = () => {
   return (
     <Panel title='Welcome'>
       <Button>Sign up</Button>
       <Button>Log in</Button>
     </Panel>
   );
-});
+};
 
 interface PanelProps {
   title: string;
