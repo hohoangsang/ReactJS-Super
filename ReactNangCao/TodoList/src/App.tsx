@@ -3,6 +3,8 @@ import Counter from './components/Counter';
 import Slider from './components/Slider';
 import TodoList from './TodoListApp/TodoList';
 import Watch from './components/Watch';
+import Form from './components/Form';
+import AutoInput from './components/AutoInput';
 
 function App() {
   return (
@@ -11,7 +13,9 @@ function App() {
       {/* <Watch /> */}
       {/* <Slider /> */}
       {/* <Count /> */}
-      <Counter />
+      {/* <Counter /> */}
+      {/* <Form /> */}
+      <AutoInput />
     </div>
   );
 }
