@@ -1,15 +1,12 @@
 import React from 'react';
 
 interface StudentListProps {
-  data: string[];
+  studentListElement: JSX.Element[];
 }
 
-export default function StudentList({ data }: StudentListProps) {
-  return (
-    <div>
-      {data.map((student) => (
-        <p key={student}>{student}</p>
-      ))}
-    </div>
-  );
+function StudentList({ studentListElement }: StudentListProps) {
+  return <div>{studentListElement}</div>;
 }
+
+// export default React.memo(StudentList); //optional
+export default StudentList;
