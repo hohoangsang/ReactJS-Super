@@ -5,6 +5,7 @@ import TodoList from './TodoListApp/TodoList';
 import Watch from './components/Watch';
 import Form from './components/Form';
 import AutoInput from './components/AutoInput';
+import Student from './components/Student';
 
 function App() {
   return (
@@ -14,8 +15,9 @@ function App() {
       {/* <Slider /> */}
       {/* <Count /> */}
       {/* <Counter /> */}
-      <Form />
+      {/* <Form /> */}
       {/* <AutoInput /> */}
+      <Student />
     </div>
   );
 }
