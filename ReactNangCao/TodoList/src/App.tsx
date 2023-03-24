@@ -6,6 +6,8 @@ import Watch from './components/Watch';
 import Form from './components/Form';
 import AutoInput from './components/AutoInput';
 import Student from './components/Student';
+import MouseTracker from './components/MouseTracker';
+import Ads from './components/MouseTracker/Ads';
 
 function App() {
   return (
@@ -17,7 +19,8 @@ function App() {
       {/* <Counter /> */}
       {/* <Form /> */}
       {/* <AutoInput /> */}
-      <Student />
+      {/* <Student /> */}
+      <MouseTracker children={(value) => <Ads {...value} />} />
     </div>
   );
 }
