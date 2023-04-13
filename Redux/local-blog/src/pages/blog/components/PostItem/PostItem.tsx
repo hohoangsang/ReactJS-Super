@@ -1,5 +1,3 @@
-import { deletePost, startUpdatePost } from 'pages/blog/blog.reducer';
-import { useDispatch } from 'react-redux';
 import { Post } from 'types/post.type';
 
 interface PostItemProps {
