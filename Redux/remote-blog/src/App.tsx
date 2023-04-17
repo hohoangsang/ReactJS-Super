@@ -1,9 +1,14 @@
+import Blog from 'pages/Blog';
+import { useEffect } from 'react';
+
 function App() {
+  useEffect(() => {
+    document.title = 'Remote-blog';
+  }, []);
+
   return (
     <div className='App'>
-      <a className='App-link' href='https://reactjs.org' target='_blank' rel='noopener noreferrer'>
-        Learn React
-      </a>
+      <Blog />
     </div>
   );
 }
