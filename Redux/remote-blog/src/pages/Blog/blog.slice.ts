@@ -33,17 +33,24 @@ export const getPostList = createAsyncThunk(
 );
 
 export const addPostRequest = createAsyncThunk('blog/addPostRequest', async (body: Omit<Post, 'id'>, thunkAPI) => {
-  const res = await api.post<Post>('/posts', body, {
-    signal: thunkAPI.signal
-  });
+  try {
+    const res = await api.post<Post>('/posts', body, {
+      signal: thunkAPI.signal
+    });
 
-  return res.data;
+    return res.data;
+  } catch (error: any) {
+    if (error.name === 'AxiosError' && error.response.status === 422) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+    throw Error(error.response);
+  }
 });
 
 export const deletePostRequest = createAsyncThunk(
   'blog/deletePostRequest', //prefix action
   async (postId: string, thunkAPI) => {
-    const res = await api.delete(`/posts/${postId}`, {
+    await api.delete(`/posts/${postId}`, {
       signal: thunkAPI.signal
     });
 
@@ -59,11 +66,17 @@ export const getPostByIdRequest = createAsyncThunk('blog/getPostById', async (po
 });
 
 export const updatePostRequest = createAsyncThunk('blog/updatePostRequest', async (post: Post, thunkAPI) => {
-  const res = await api.put<Post>(`/posts/${post.id}`, post, {
-    signal: thunkAPI.signal
-  });
-
-  return res.data;
+  try {
+    const res = await api.put<Post>(`/posts/${post.id}`, post, {
+      signal: thunkAPI.signal
+    });
+    return res.data;
+  } catch (error: any) {
+    if (error.name === 'AxiosError' && error.response.status === 422) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+    throw Error(error.response);
+  }
 });
 
 const blogSlice = createSlice({
@@ -114,13 +127,13 @@ const blogSlice = createSlice({
         (action) => action.type.endsWith('/pending'),
         (state, action) => {
           state.loading = true;
-          state.currentRequestId = action.meta.requestId;
+          state.currentRequestId = action?.meta?.requestId;
         }
       )
       .addMatcher<FulfilledAction | RejectedAction>(
         (action) => action.type.endsWith('/fulfilled') || action.type.endsWith('/rejected'),
         (state, action) => {
-          if (state.currentRequestId === action.meta.requestId) {
+          if (state.currentRequestId === action?.meta?.requestId) {
             state.loading = false;
             state.currentRequestId = undefined;
           }
