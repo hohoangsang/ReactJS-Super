@@ -1,6 +1,15 @@
+import { useGetPostListQuery } from 'pages/blog/blog.services';
+import { Fragment } from 'react';
 import PostItem from '../PostItem';
+import SkeletonPost from '../SkeletonPost';
 
 export default function PostList() {
+  //isLoading chỉ cập nhật trong lần request đầu tiên
+  //isFetching cập nhật mỗi lần request
+  const { data: postList, isLoading, isFetching } = useGetPostListQuery();
+
+  console.log({ postList, isLoading, isFetching });
+
   return (
     <div className='bg-white py-6 sm:py-8 lg:py-12'>
       <div className='mx-auto max-w-screen-xl px-4 md:px-8'>
@@ -11,10 +20,16 @@ export default function PostList() {
           </p>
         </div>
         <div className='grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-2 xl:grid-cols-2 xl:gap-8'>
-          <PostItem />
-          <PostItem />
-          <PostItem />
-          <PostItem />
+          {isFetching && (
+            <Fragment>
+              <SkeletonPost />
+              <SkeletonPost />
+              <SkeletonPost />
+              <SkeletonPost />
+            </Fragment>
+          )}
+
+          {!isFetching && postList?.map((post) => <PostItem key={post.id} post={post} />)}
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Post } from "types/post.type";
 
 export const blogApi = createApi({
-  reducerPath: "blogApi",
+  reducerPath: "blogApi", //Tên field trong redux state
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/" }),
   endpoints: (builder) => ({
     //Gerneric type thứ tự lần lượt là type giá trị trả về và type của argument
