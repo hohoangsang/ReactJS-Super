@@ -11,7 +11,7 @@ export default function PostList() {
   const { data: postList, isLoading, isFetching } = useGetPostListQuery();
   const dispatch = useAppDispatch();
 
-  const [deletePost, deletePostResult] = useDeletePostMutation();
+  const [deletePost, { isLoading: isDeletingPost }] = useDeletePostMutation();
 
   const handleDeletePost = (postId: string) => {
     deletePost(postId);
@@ -47,6 +47,7 @@ export default function PostList() {
                 post={post}
                 handleDeletePost={handleDeletePost}
                 handleStartUpdate={handleStartUpdate}
+                isDeletingPost={isDeletingPost}
               />
             ))}
         </div>

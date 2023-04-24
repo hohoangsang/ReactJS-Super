@@ -1,13 +1,15 @@
+import LoadingBtn from 'common/LoadingBtn';
 import { Post } from 'types/post.type';
 
 interface PostItemProps {
   post: Post;
   handleDeletePost: (postId: string) => void;
   handleStartUpdate: (postId: string) => void;
+  isDeletingPost: boolean;
 }
 
 export default function PostItem(props: PostItemProps) {
-  const { post, handleDeletePost, handleStartUpdate } = props;
+  const { post, handleDeletePost, handleStartUpdate, isDeletingPost } = props;
 
   return (
     <div className='flex flex-col items-center overflow-hidden rounded-lg border md:flex-row'>
@@ -32,13 +34,18 @@ export default function PostItem(props: PostItemProps) {
             >
               Edit
             </button>
-            <button
-              type='button'
-              className='rounded-r-lg border-t border-b border-r border-gray-200 bg-white py-2 px-4 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700'
-              onClick={() => handleDeletePost(post.id)}
-            >
-              Delete
-            </button>
+
+            {isDeletingPost && <LoadingBtn text='Deleting...' />}
+
+            {!isDeletingPost && (
+              <button
+                type='button'
+                className='rounded-r-lg border-t border-b border-r border-gray-200 bg-white py-2 px-4 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700'
+                onClick={() => handleDeletePost(post.id)}
+              >
+                Delete
+              </button>
+            )}
           </div>
         </div>
       </div>

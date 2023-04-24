@@ -2,14 +2,10 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Post } from 'types/post.type';
 
 interface InitialState {
-  postList: Post[];
-  currentPost: Post | null;
   postId: string;
 }
 
 const initialState: InitialState = {
-  postList: [],
-  currentPost: null,
   postId: ''
 };
 
