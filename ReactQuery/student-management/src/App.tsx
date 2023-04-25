@@ -1,6 +1,6 @@
 import MainLayout from 'layouts/MainLayout';
 import About from 'pages/About';
-import AddStudent from 'pages/AddStudent';
+import StudentForm from 'pages/StudentForm';
 import Dashboard from 'pages/Dashboard';
 import NotFound from 'pages/NotFound';
 import Students from 'pages/Students';
@@ -18,11 +18,11 @@ function App() {
     },
     {
       path: '/students/:id',
-      element: <AddStudent />
+      element: <StudentForm />
     },
     {
       path: '/students/add',
-      element: <AddStudent />
+      element: <StudentForm />
     },
     {
       path: '/about',

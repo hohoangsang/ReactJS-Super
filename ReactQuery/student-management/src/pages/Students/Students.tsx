@@ -26,6 +26,17 @@ export default function Students() {
   return (
     <div>
       <h1 className='text-lg'>Students</h1>
+
+      <div className='mt-5'>
+        <Link
+          type='button'
+          className='rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300'
+          to={'/students/add'}
+        >
+          Add student
+        </Link>
+      </div>
+
       {isLoading && <Skeleton />}
       {!isLoading && data && (
         <Fragment>
@@ -52,29 +63,33 @@ export default function Students() {
               </thead>
 
               <tbody>
-                {data?.data.map((student, index) => (
-                  <Fragment key={student?.id}>
-                    <tr className='border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600'>
-                      <td className='py-4 px-6'>{page * LIMIT - LIMIT + index + 1}</td>
-                      <td className='py-4 px-6'>
-                        <img src={student.avatar} alt='student' className='h-5 w-5' />
-                      </td>
-                      <th scope='row' className='whitespace-nowrap py-4 px-6 font-medium text-gray-900 dark:text-white'>
-                        {student.last_name}
-                      </th>
-                      <td className='py-4 px-6'>{student.email}</td>
-                      <td className='py-4 px-6 text-right'>
-                        <Link
-                          to='/students/1'
-                          className='mr-5 font-medium text-blue-600 hover:underline dark:text-blue-500'
+                {data.data &&
+                  data.data.map((student, index) => (
+                    <Fragment key={student.id}>
+                      <tr className='border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600'>
+                        <td className='py-4 px-6'>{page * LIMIT - LIMIT + index + 1}</td>
+                        <td className='py-4 px-6'>
+                          <img src={student.avatar} alt='student' className='h-5 w-5' />
+                        </td>
+                        <th
+                          scope='row'
+                          className='whitespace-nowrap py-4 px-6 font-medium text-gray-900 dark:text-white'
                         >
-                          Edit
-                        </Link>
-                        <button className='font-medium text-red-600 dark:text-red-500'>Delete</button>
-                      </td>
-                    </tr>
-                  </Fragment>
-                ))}
+                          {student.last_name}
+                        </th>
+                        <td className='py-4 px-6'>{student.email}</td>
+                        <td className='py-4 px-6 text-right'>
+                          <Link
+                            to='/students/1'
+                            className='mr-5 font-medium text-blue-600 hover:underline dark:text-blue-500'
+                          >
+                            Edit
+                          </Link>
+                          <button className='font-medium text-red-600 dark:text-red-500'>Delete</button>
+                        </td>
+                      </tr>
+                    </Fragment>
+                  ))}
               </tbody>
             </table>
           </div>
@@ -112,6 +127,7 @@ export default function Students() {
                             }
                           )}
                           to={`/students?page=${pageNumber}`}
+                          key={index}
                         >
                           {pageNumber}
                         </Link>

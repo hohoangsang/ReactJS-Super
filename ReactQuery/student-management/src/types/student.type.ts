@@ -1,12 +1,12 @@
 export interface Student {
-  "id": string | number,
-  "first_name": string,
-  "last_name": string,
-  "email": string,
-  "gender": string,
-  "country": string,
-  "avatar": string,
-  "btc_address": string
+  id: string | number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  gender: string;
+  country: string;
+  avatar: string;
+  btc_address: string;
 }
 
-export type StudentList = Pick<Student, "id" | "avatar" | "last_name" | "email">[]
+export type StudentList = Pick<Student, 'id' | 'avatar' | 'last_name' | 'email'>[];
