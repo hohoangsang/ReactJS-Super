@@ -1,8 +1,18 @@
-import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { studentApi } from 'apis/students.api.';
+import classNames from 'classnames';
+import { useMemo, useState } from 'react';
 import { useMatch } from 'react-router-dom';
 import { Student } from 'types/student.type';
+import { isAxiosError } from 'utils/utils';
 
 type FormStateType = Omit<Student, 'id'>;
+
+type FormErrorType =
+  | {
+      [key in keyof FormStateType]: string;
+    }
+  | null;
 
 const initialState: FormStateType = {
   avatar: '',
@@ -15,12 +25,32 @@ const initialState: FormStateType = {
 };
 
 export default function AddStudent() {
-  const isAddMatch = useMatch('students/add');
+  const isAddMatch = useMatch('/students/add');
   const [formState, setFormState] = useState<FormStateType>(initialState);
+
+  const { mutate, error } = useMutation({
+    mutationFn: (body: FormStateType) => {
+      return studentApi.addStudent(body);
+    }
+  });
+
+  const formError: FormErrorType = useMemo(() => {
+    if (isAxiosError<{ error: FormErrorType }>(error) && error.response?.status === 422) {
+      return error.response.data.error;
+    }
+
+    return null;
+  }, [error]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(formState);
+
+    //async function
+    mutate(formState, {
+      onSuccess: (res) => {
+        console.log(res);
+      }
+    });
   };
 
   const handleChangeValue = (key: keyof FormStateType) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,10 +63,16 @@ export default function AddStudent() {
       <form className='mt-6' onSubmit={handleSubmit}>
         <div className='group relative z-0 mb-6 w-full'>
           <input
-            type='email'
+            type='text'
             name='floating_email'
             id='floating_email'
-            className='peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500'
+            className={classNames(
+              'peer block w-full appearance-none border-0 border-b-2  py-2 px-0 text-sm focus:outline-none focus:ring-0',
+              {
+                'border-gray-300 bg-transparent text-gray-900 focus:border-blue-600': !formError?.email,
+                'border-red-500 bg-red-200 text-red-900 focus:border-red-500': formError?.email
+              }
+            )}
             placeholder=' '
             required
             value={formState.email}
@@ -44,10 +80,21 @@ export default function AddStudent() {
           />
           <label
             htmlFor='floating_email'
-            className='absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500'
+            className={classNames(
+              'absolute top-2 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium ',
+              {
+                'text-gray-500 peer-focus:text-blue-600': !formError?.email,
+                'text-red-500 peer-focus:text-red-500': formError?.email
+              }
+            )}
           >
             Email address
           </label>
+          {formError?.email && (
+            <p className='mt-2 text-sm text-red-600'>
+              <span className='font-medium'>Lỗi!</span> {formError.email}
+            </p>
+          )}
         </div>
 
         <div className='group relative z-0 mb-6 w-full'>
@@ -110,7 +157,7 @@ export default function AddStudent() {
           />
           <label
             htmlFor='country'
-            className='absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500'
+            className='absolute top-2 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500'
           >
             Country
           </label>
@@ -129,7 +176,7 @@ export default function AddStudent() {
             />
             <label
               htmlFor='first_name'
-              className='absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500'
+              className='absolute top-2 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500'
             >
               First Name
             </label>
@@ -147,7 +194,7 @@ export default function AddStudent() {
             />
             <label
               htmlFor='last_name'
-              className='absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500'
+              className='absolute top-2 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500'
             >
               Last Name
             </label>
@@ -167,7 +214,7 @@ export default function AddStudent() {
             />
             <label
               htmlFor='avatar'
-              className='absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500'
+              className='absolute top-2 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500'
             >
               Avatar Base64
             </label>
@@ -185,7 +232,7 @@ export default function AddStudent() {
             />
             <label
               htmlFor='btc_address'
-              className='absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500'
+              className='absolute top-2 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500'
             >
               BTC Address
             </label>

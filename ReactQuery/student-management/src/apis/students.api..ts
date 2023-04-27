@@ -1,4 +1,4 @@
-import { StudentList } from 'types/student.type';
+import { Student, StudentList } from 'types/student.type';
 import http from './api';
 
 export const studentApi = {
@@ -9,5 +9,9 @@ export const studentApi = {
         _limit: limit
       }
     });
+  },
+
+  addStudent: (body: Omit<Student, "id">) => {
+    return http.post<Student>("students", body)
   }
 };
