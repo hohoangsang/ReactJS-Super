@@ -11,7 +11,19 @@ export const studentApi = {
     });
   },
 
-  addStudent: (body: Omit<Student, "id">) => {
-    return http.post<Student>("students", body)
+  addStudent: (body: Omit<Student, 'id'>) => {
+    return http.post<Student>('students', body);
+  },
+
+  getOne: (id: string | number) => {
+    return http.get<Student>(`students/${id}`);
+  },
+
+  updateStudent: (id: string | number, body: Student) => {
+    return http.put<Student>(`students/${id}`, body);
+  },
+
+  deleteStudent: (id: number) => {
+    return http.delete<{}>(`students/${id}`);
   }
 };

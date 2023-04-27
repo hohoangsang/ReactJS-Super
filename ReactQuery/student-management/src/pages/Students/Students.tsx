@@ -1,15 +1,22 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { studentApi } from 'apis/students.api.';
 import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { useQueryString } from 'utils/utils';
 import classNames from 'classnames';
+import { toast } from 'react-toastify';
 
 const LIMIT = 10;
 
 export default function Students() {
   const queryString = useQueryString();
   const page = Number(queryString?.page) || 1;
+
+  const deleteStudentMutation = useMutation({
+    mutationFn: (id: number) => {
+      return studentApi.deleteStudent(id);
+    }
+  });
 
   const { data, isLoading } = useQuery({
     queryKey: ['students', page],
@@ -22,6 +29,14 @@ export default function Students() {
   const totalRecord = Number(data?.headers['x-total-count']) || 0;
 
   const totalPage = Math.ceil(totalRecord / LIMIT);
+
+  const handleDelete = (id: number) => {
+    deleteStudentMutation.mutate(id, {
+      onSuccess: (_, id) => {
+        toast.success(`Deleted student with id: ${id}`);
+      }
+    });
+  };
 
   return (
     <div>
@@ -80,12 +95,17 @@ export default function Students() {
                         <td className='py-4 px-6'>{student.email}</td>
                         <td className='py-4 px-6 text-right'>
                           <Link
-                            to='/students/1'
+                            to={`/students/${student.id}`}
                             className='mr-5 font-medium text-blue-600 hover:underline dark:text-blue-500'
                           >
                             Edit
                           </Link>
-                          <button className='font-medium text-red-600 dark:text-red-500'>Delete</button>
+                          <button
+                            className='font-medium text-red-600 dark:text-red-500'
+                            onClick={() => handleDelete(student.id)}
+                          >
+                            Delete
+                          </button>
                         </td>
                       </tr>
                     </Fragment>
