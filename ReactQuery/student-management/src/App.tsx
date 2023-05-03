@@ -38,7 +38,7 @@ function App() {
 
   return (
     <div className='App'>
-      <ToastContainer />
+      <ToastContainer autoClose={3000} closeOnClick={true} />
       <MainLayout>{elements}</MainLayout>
     </div>
   );

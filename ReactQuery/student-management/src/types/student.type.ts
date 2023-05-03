@@ -9,4 +9,5 @@ export interface Student {
   btc_address: string;
 }
 
-export type StudentList = Pick<Student, 'id' | 'avatar' | 'last_name' | 'email'>[];
+export type StudentItem = Pick<Student, 'id' | 'avatar' | 'last_name' | 'email'>;
+export type StudentList = StudentItem[];

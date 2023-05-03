@@ -1,8 +1,8 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { studentApi } from 'apis/students.api.';
 import classNames from 'classnames';
 import LoadingBtn from 'common/LoadingBtn';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useMatch, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Student } from 'types/student.type';
@@ -26,21 +26,32 @@ const initialState: FormStateType = {
   last_name: ''
 };
 
+const gender = {
+  male: 'Male',
+  female: 'Female',
+  other: 'Other'
+};
+
 export default function AddStudent() {
   const isAddMatch = useMatch('/students/add');
   const [formState, setFormState] = useState<FormStateType>(initialState);
   const { id } = useParams();
+  const queryClient = useQueryClient();
 
-  const {} = useQuery({
+  const studentQueries = useQuery({
     queryKey: ['student', id],
     queryFn: () => {
       return studentApi.getOne(id as string);
     },
     enabled: id !== undefined,
-    onSuccess: (data) => {
-      setFormState(data.data);
-    }
+    staleTime: 10 * 1000 //10 second
   });
+
+  useEffect(() => {
+    if (studentQueries.data) {
+      setFormState(studentQueries.data.data);
+    }
+  }, [studentQueries.data]);
 
   const addStudentMutation = useMutation({
     mutationFn: (body: FormStateType) => {
@@ -67,6 +78,10 @@ export default function AddStudent() {
     return null;
   }, [isAddMatch, addStudentMutation.error, updateStudentMutation.error]);
 
+  const isLoadingForm: boolean = useMemo(() => {
+    return isAddMatch ? addStudentMutation.isLoading : updateStudentMutation.isLoading;
+  }, [isAddMatch, addStudentMutation.isLoading, updateStudentMutation.isLoading]);
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -74,6 +89,7 @@ export default function AddStudent() {
       //async function
       addStudentMutation.mutate(formState, {
         onSuccess: (data) => {
+          toast.success('Add student successfully!');
           setFormState(initialState);
         },
         onError: (error) => {
@@ -81,7 +97,11 @@ export default function AddStudent() {
         }
       });
     } else {
-      updateStudentMutation.mutate(formState);
+      updateStudentMutation.mutate(formState, {
+        onSuccess: (data) => {
+          queryClient.setQueryData(['student', id], data);
+        }
+      });
     }
   };
 
@@ -142,8 +162,8 @@ export default function AddStudent() {
                   id='gender-1'
                   type='radio'
                   name='gender'
-                  value='Male'
-                  checked={formState.gender === 'Male'}
+                  value={gender.male}
+                  checked={formState.gender === gender.male}
                   className='h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600'
                   onChange={handleChangeValue('gender')}
                 />
@@ -157,8 +177,8 @@ export default function AddStudent() {
                   type='radio'
                   name='gender'
                   className='h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600'
-                  value='Female'
-                  checked={formState.gender === 'Female'}
+                  value={gender.female}
+                  checked={formState.gender === gender.female}
                   onChange={handleChangeValue('gender')}
                 />
                 <label htmlFor='gender-2' className='ml-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
@@ -171,8 +191,8 @@ export default function AddStudent() {
                   type='radio'
                   name='gender'
                   className='h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600'
-                  value='Other'
-                  checked={formState.gender === 'Other'}
+                  value={gender.other}
+                  checked={formState.gender === gender.other}
                   onChange={handleChangeValue('gender')}
                 />
                 <label htmlFor='gender-3' className='ml-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
@@ -277,9 +297,9 @@ export default function AddStudent() {
           </div>
         </div>
 
-        {addStudentMutation.isLoading && <LoadingBtn text='Submiting...' />}
+        {isLoadingForm && <LoadingBtn text='Submiting...' />}
 
-        {!addStudentMutation.isLoading && (
+        {!isLoadingForm && (
           <button
             type='submit'
             className='w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto'

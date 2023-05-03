@@ -1,16 +1,18 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { studentApi } from 'apis/students.api.';
+import classNames from 'classnames';
+import Skeleton from 'common/Skeleton';
 import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { useQueryString } from 'utils/utils';
-import classNames from 'classnames';
 import { toast } from 'react-toastify';
+import { useQueryString } from 'utils/utils';
 
 const LIMIT = 10;
 
 export default function Students() {
   const queryString = useQueryString();
   const page = Number(queryString?.page) || 1;
+  const queryClient = useQueryClient();
 
   const deleteStudentMutation = useMutation({
     mutationFn: (id: number) => {
@@ -34,7 +36,18 @@ export default function Students() {
     deleteStudentMutation.mutate(id, {
       onSuccess: (_, id) => {
         toast.success(`Deleted student with id: ${id}`);
+        queryClient.invalidateQueries({ queryKey: ['students', page], exact: true });
       }
+    });
+  };
+
+  const prefetchStudent = (id: number) => {
+    queryClient.prefetchQuery({
+      queryKey: ['student', String(id)],
+      queryFn: () => {
+        return studentApi.getOne(id);
+      },
+      staleTime: 10 * 1000 //10 second
     });
   };
 
@@ -81,7 +94,10 @@ export default function Students() {
                 {data.data &&
                   data.data.map((student, index) => (
                     <Fragment key={student.id}>
-                      <tr className='border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600'>
+                      <tr
+                        className='border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600'
+                        onMouseEnter={() => prefetchStudent(student.id)}
+                      >
                         <td className='py-4 px-6'>{page * LIMIT - LIMIT + index + 1}</td>
                         <td className='py-4 px-6'>
                           <img src={student.avatar} alt='student' className='h-5 w-5' />
@@ -103,6 +119,7 @@ export default function Students() {
                           <button
                             className='font-medium text-red-600 dark:text-red-500'
                             onClick={() => handleDelete(student.id)}
+                            type='button'
                           >
                             Delete
                           </button>
@@ -173,27 +190,6 @@ export default function Students() {
           </div>
         </Fragment>
       )}
-    </div>
-  );
-}
-
-function Skeleton() {
-  return (
-    <div role='status' className='mt-6 animate-pulse'>
-      <div className='mb-4 h-4  rounded bg-gray-200 dark:bg-gray-700' />
-      <div className='mb-2.5 h-10  rounded bg-gray-200 dark:bg-gray-700' />
-      <div className='mb-2.5 h-10 rounded bg-gray-200 dark:bg-gray-700' />
-      <div className='mb-2.5 h-10  rounded bg-gray-200 dark:bg-gray-700' />
-      <div className='mb-2.5 h-10  rounded bg-gray-200 dark:bg-gray-700' />
-      <div className='mb-2.5 h-10  rounded bg-gray-200 dark:bg-gray-700' />
-      <div className='mb-2.5 h-10  rounded bg-gray-200 dark:bg-gray-700' />
-      <div className='mb-2.5 h-10  rounded bg-gray-200 dark:bg-gray-700' />
-      <div className='mb-2.5 h-10  rounded bg-gray-200 dark:bg-gray-700' />
-      <div className='mb-2.5 h-10  rounded bg-gray-200 dark:bg-gray-700' />
-      <div className='mb-2.5 h-10  rounded bg-gray-200 dark:bg-gray-700' />
-      <div className='mb-2.5 h-10  rounded bg-gray-200 dark:bg-gray-700' />
-      <div className='h-10  rounded bg-gray-200 dark:bg-gray-700' />
-      <span className='sr-only'>Loading...</span>
     </div>
   );
 }
