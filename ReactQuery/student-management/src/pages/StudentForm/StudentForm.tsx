@@ -62,9 +62,6 @@ export default function AddStudent() {
   const updateStudentMutation = useMutation({
     mutationFn: (body: FormStateType) => {
       return studentApi.updateStudent(id as string, body as Student);
-    },
-    onSuccess: () => {
-      toast.success('Update student successfully!');
     }
   });
 
@@ -99,6 +96,7 @@ export default function AddStudent() {
     } else {
       updateStudentMutation.mutate(formState, {
         onSuccess: (data) => {
+          toast.success('Update student successfully!');
           queryClient.setQueryData(['student', id], data);
         }
       });

@@ -7,6 +7,8 @@ import Students from 'pages/Students';
 import { useRoutes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Spinner from 'common/Spinner';
+import { useIsFetching, useIsMutating } from '@tanstack/react-query';
 
 function App() {
   const elements = useRoutes([
@@ -36,9 +38,13 @@ function App() {
     }
   ]);
 
+  const isFetching = useIsFetching();
+  const isMutating = useIsMutating();
+
   return (
     <div className='App'>
-      <ToastContainer autoClose={3000} closeOnClick={true} />
+      {isMutating + isFetching !== 0 && <Spinner />}
+      <ToastContainer closeOnClick autoClose={3000} />
       <MainLayout>{elements}</MainLayout>
     </div>
   );
