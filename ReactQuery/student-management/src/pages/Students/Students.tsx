@@ -23,9 +23,16 @@ export default function Students() {
   const { data, isLoading } = useQuery({
     queryKey: ['students', page],
     queryFn: () => {
-      return studentApi.getAll(page, LIMIT);
+      const controller = new AbortController();
+
+      setTimeout(() => {
+        controller.abort();
+      }, 3000);
+
+      return studentApi.getAll(page, LIMIT, controller.signal);
     },
-    keepPreviousData: true
+    keepPreviousData: true,
+    retry: 0
   });
 
   const totalRecord = Number(data?.headers['x-total-count']) || 0;
@@ -51,9 +58,43 @@ export default function Students() {
     });
   };
 
+  const handleFetchStudent = (delay: number) => {
+    queryClient.prefetchQuery({
+      queryKey: ['students', page],
+      queryFn: () => {
+        return studentApi.getAll(page, LIMIT);
+      },
+      staleTime: delay * 1000
+    });
+  };
+
+  const cancelRequest = () => {
+    queryClient.cancelQueries({
+      queryKey: ['students', page]
+    });
+  };
+
   return (
     <div>
       <h1 className='text-lg'>Students</h1>
+
+      <div>
+        <button className='mt-6 rounded-lg bg-blue-300 py-2.5 px-5' onClick={() => handleFetchStudent(10)}>
+          Click 10s
+        </button>
+      </div>
+
+      <div>
+        <button className='mt-6 rounded-lg bg-blue-300 py-2.5 px-5' onClick={() => handleFetchStudent(2)}>
+          Click 2s
+        </button>
+      </div>
+
+      <div>
+        <button className='mt-6 rounded-lg bg-red-600 py-2.5 px-5 text-white' onClick={cancelRequest}>
+          Cancel request
+        </button>
+      </div>
 
       <div className='mt-5'>
         <Link
@@ -66,7 +107,7 @@ export default function Students() {
       </div>
 
       {isLoading && <Skeleton />}
-      {!isLoading && data && (
+      {!isLoading && (
         <Fragment>
           <div className='relative mt-6 overflow-x-auto shadow-md sm:rounded-lg'>
             <table className='w-full text-left text-sm text-gray-500 dark:text-gray-400'>
@@ -91,7 +132,7 @@ export default function Students() {
               </thead>
 
               <tbody>
-                {data.data &&
+                {data?.data &&
                   data.data.map((student, index) => (
                     <Fragment key={student.id}>
                       <tr

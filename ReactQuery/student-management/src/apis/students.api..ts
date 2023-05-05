@@ -1,13 +1,15 @@
 import { Student, StudentList } from 'types/student.type';
 import http from './api';
+import { sign } from 'crypto';
 
 export const studentApi = {
-  getAll: (page: string | number, limit: string | number) => {
+  getAll: (page: string | number, limit: string | number, signal?: AbortSignal) => {
     return http.get<StudentList>('students', {
       params: {
         _page: page,
         _limit: limit
-      }
+      },
+      signal
     });
   },
 

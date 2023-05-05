@@ -5,8 +5,6 @@ import Dashboard from 'pages/Dashboard';
 import NotFound from 'pages/NotFound';
 import Students from 'pages/Students';
 import { useRoutes } from 'react-router-dom';
-import Spinner from 'common/Spinner';
-import { useIsFetching, useIsMutating } from '@tanstack/react-query';
 
 function App() {
   const elements = useRoutes([
@@ -36,12 +34,8 @@ function App() {
     }
   ]);
 
-  const isFetching = useIsFetching();
-  const isMutating = useIsMutating();
-
   return (
     <div className='App'>
-      {isFetching + isMutating !== 0 && <Spinner />}
       <MainLayout>{elements}</MainLayout>
     </div>
   );
