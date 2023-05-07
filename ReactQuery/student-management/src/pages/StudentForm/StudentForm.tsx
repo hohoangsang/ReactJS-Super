@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { studentApi } from 'apis/students.api.';
+import { studentApi } from 'apis/students.api';
 import classNames from 'classnames';
 import LoadingBtn from 'common/LoadingBtn';
 import { useEffect, useMemo, useState } from 'react';
